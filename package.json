@@ -1,0 +1,21 @@
+{
+  "name": "furry-trash-api",
+  "version": "0.0.1",
+  "author": "Kerby Keith Aquino",
+  "description": "A silly yet ridiculous API that gives you quotes from furries and popufurs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "furry",
+    "furries",
+    "housepets",
+    "quotes",
+    "trash"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^2.0.9"
+  }
+}
