@@ -2,17 +2,18 @@ package main
 
 import (
 	"errors"
+	"math/rand"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type YourMom struct {
+type Quote struct {
 	Quote  string `json:"quote"`
 	Author string `json:"author"`
 }
 
-var Abomination = []YourMom{
+var QuotesContainer = []Quote{
 	{Quote: "I'm pooping right now", Author: "Lmao"},
 	{Quote: "You mess with the meow meow you get the peow peow", Author: "A cat apparently"},
 	{Quote: "It's called hustle, sweetheart.", Author: "Judy Hopps"},
@@ -34,24 +35,24 @@ var Abomination = []YourMom{
 }
 
 func getQuotes(context *gin.Context) {
-	context.IndentedJSON(http.StatusOK, Abomination)
+	context.IndentedJSON(http.StatusOK, QuotesContainer)
 }
 
-func addQuotes(context *gin.Context) {
-	var newQuote YourMom
+// func addQuotes(context *gin.Context) {
+// 	var newQuote Quote
 
-	if err := context.BindJSON(&newQuote); err != nil {
-		return
-	}
+// 	if err := context.BindJSON(&newQuote); err != nil {
+// 		return
+// 	}
 
-	Abomination = append(Abomination, newQuote)
-	context.IndentedJSON(http.StatusCreated, newQuote)
-}
+// 	QuotesContainer = append(QuotesContainer, newQuote)
+// 	context.IndentedJSON(http.StatusCreated, newQuote)
+// }
 
-func getQuotesByAuthor(Author string) (*YourMom, error) {
-	for i, author := range Abomination {
+func getQuotesByAuthor(Author string) (*Quote, error) {
+	for i, author := range QuotesContainer {
 		if author.Author == Author {
-			return &Abomination[i], nil
+			return &QuotesContainer[i], nil
 		}
 	}
 
@@ -70,10 +71,25 @@ func getAuthor(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, quote)
 }
 
+func getQuotesOnly(context *gin.Context) {
+	quotes := []Quote{QuotesContainer[0]}
+	for _, quote := range QuotesContainer {
+		quotes = append(quotes, quote)
+	}
+
+	context.IndentedJSON(http.StatusOK, quotes)
+}
+
+func getQuoteRandom(context *gin.Context) {
+	quote := QuotesContainer[rand.Intn(len(QuotesContainer))]
+	context.IndentedJSON(http.StatusOK, quote)
+}
+
 func main() {
 	router := gin.Default()
-	router.GET("/quotes", getQuotes)
-	router.GET("/quotes/:author", getAuthor)
-	router.POST("/quotes", addQuotes)
-	router.Run("localhost:8080")
+	router.GET("/furry", getQuotes)
+	router.GET("/furry/quotes", getQuotesOnly)
+	router.GET("/furry/random", getQuoteRandom)
+
+	router.Run("localhost:8000")
 }
